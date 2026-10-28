@@ -6,9 +6,10 @@
 // #define SPI_DISPLAY 1                  //                    SPI display  320x240, 2.8inch,        ILI9341             XPT2046, ESP32s3 or ESP32p4
 // #define SPI_DISPLAY 2                  //                    SPI display  480x320, 3.5" od 4"      ILI9488 or ST7796,  XPT2046, ESP32s3 or ESP32p4
 // #define SPI_DISPLAY 3                  //                    SPI display  480x320, 3.5" od 4"      ILI9488 or ST7796,  FT6x63,  ESP32s3 or ESP32p4
-#define LCD_DISPLAY_ESP32_S3_28        // Hosyond            SPI display  320x240, 2.8inch,        ILI9341             FT6x63,  ESP32s3 N16R8
+// #define LCD_DISPLAY_ESP32_S3_28        // Hosyond            SPI display  320x240, 2.8inch,        ILI9341             FT6x63,  ESP32s3 N16R8
 // #define LCD_DISPLAY_ESP32_S3_40        // Hosyond            SPI display  480x320, 4"              ST7796,             FT6x63,  ESP32s3 N16R8
 // #define ESP32_8048S070                 // Sunton             RGB display  800x480, 7",                                 GT911,   ESP32s3 N16R8
+   #define ESP32_8048S043C                // Sunton             RGB display  800x480, 4.3",           ST7262              GT911,   ESP32-S3 N16R8
 // #define ESP32_S3_Touch_LCD7            // Waveshare          RGB display  800x480, 7",                                 GT911,   ESP32s3 N8R8
 // #define ESP32_P4_WIFI6_TOUCH_LCD_43    // Waveshare          DSI display  800x480, 4.3",           ST7701,             GT911,   ESP32p4 N32R32
 // #define ESP32_P4_WIFI6_TOUCH_LCD7_7B   // Waveshare          DSI display 1024x600, 7",             EK97007,            GT911,   ESP32p4_es N32R32
@@ -292,7 +293,7 @@
     #endif                             // CONFIG_IDF_TARGET_ESP32S3
 #endif // CONFIG_IDF_TARGET_ESP32S3
 
-// // —————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//—————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 // 📌📌📌  DISPLAY [800x480] ESP32-S3 SUNTON   📌📌📌
 // —————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 #if (CONFIG_IDF_TARGET_ESP32S3 == 1)
@@ -332,6 +333,55 @@ const Timing RGB_TIMING = {.h_res = 800, .v_res = 480, .pixel_clock_hz = 8600000
         #define AMP_ENABLED         -1 // onboard amplifier (-1 if not available)
     #endif
 #endif // CONFIG_IDF_TARGET_ESP32S3
+
+// —————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+// 📌📌📌 DISPLAY [800x480] ESP32-S3 SUNTON 4.3" HD  📌📌📌
+// —————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+#if (CONFIG_IDF_TARGET_ESP32S3 == 1)
+    #ifdef ESP32_8048S043C
+
+        #define TFT_CONTROLLER       7 // (7) RGB[800x480]
+        #define TFT_ROTATION         0 // (0) none, (1) 90°CW, (2) 180°CW, (3) 270°CW
+        #define TP_CONTROLLER        7 // (7) GT911
+        #define TP_ROTATION          3 // (0) none, (1) 90°CW, (2) 180°CW, (3) 270°CW
+        #define TP_H_MIRROR          0 // (0) default, (1) mirror left <-> right
+        #define TP_V_MIRROR          0 // (0) default, (1) mirror up <-> down
+        #define DISPLAY_INVERSION    0 // (0) off, (1) on
+        #define BRIGHTNESS_INVERSION 0 // (0) off, (1) on, bg-led
+        #define BRIGHTNESS_MIN      25 // you can't see anything underneath
+        #define AMP_EN_INVERSION     0 // (0) HIGH - amp is enabled, (1) LOW - amp is enabled
+
+        const Pins RGB_PINS = {
+            .b0 =  8, .b1 =  3, .b2 = 46, .b3 =  9, .b4 =  1,
+            .g0 =  5, .g1 =  6, .g2 =  7, .g3 = 15, .g4 = 16, .g5 = 4,
+            .r0 = 45, .r1 = 48, .r2 = 47, .r3 = 21, .r4 = 14,
+            .hsync = 39, .vsync = 41, .de = 40, .pclk = 42, .bl = 2 };
+
+        const Timing RGB_TIMING = {
+            .h_res = 800, .v_res = 480, .pixel_clock_hz = 12500000,
+            .hsync_pulse_width = 4, .hsync_back_porch  = 8, .hsync_front_porch = 8,
+            .vsync_pulse_width = 4, .vsync_back_porch  = 8, .vsync_front_porch = 8 };
+
+        #define TP_IRQ             -1
+        #define SD_MMC_CMD         11
+        #define SD_MMC_CLK         12
+        #define SD_MMC_D0          13
+        #define I2S_DOUT           17
+        #define I2S_BCLK           0
+        #define I2S_LRC            18
+        #define I2S_MCLK           -1
+        #define IR_PIN             -1
+        #define BT_EMITTER_RX      -1
+        #define BT_EMITTER_TX      -1
+        #define BT_EMITTER_MODE    -1
+        #define BT_EMITTER_CONNECT -1
+        #define TFT_BL             2
+        #define I2C_SDA            19
+        #define I2C_SCL            20
+        #define AMP_ENABLED        -1
+
+    #endif
+#endif
 
 // —————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 // 📌📌📌  DISPLAY [800x480] ESP32-S3 WAVESHARE 7"   📌📌📌
@@ -435,6 +485,7 @@ const Timing DSI_TIMING = {.h_res = 480, .v_res = 800, .pixel_clock_mhz = 30, .h
 
     #endif
 #endif
+
 // —————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 // 📌📌📌  DSI-DISPLAY [1024x600] ESP32-P4 WAVESHARE 7"   📌📌📌
 // —————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
